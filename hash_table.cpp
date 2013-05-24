@@ -1,6 +1,10 @@
 #include "hash_table.h"
 
 #include <cstdlib>
+#include <iostream>
+#include <iomanip>
+
+#define DEBUG // Comment out to disable debug mode
 
 HashTable::HashTable()
 {
@@ -11,7 +15,52 @@ HashTable::HashTable()
 
 HashTable::HashTable(const HashTable &other)
 {
+    table = new Item*[TABLE_SIZE];
+    for(int i = 0; i < TABLE_SIZE; i++) {
+        Item *original = other.table[i];
 
+        if(original) { // Create a copy of the first item if one exists
+            Item *copy = new Item();
+            table[i] = copy; // Set first item to table index
+            copy->key = original->key;
+            copy->val = original->val;
+
+            while(original->next) { // Create copies of any additional items found
+                original = original->next;
+                Item *nextItem = new Item();
+                copy->next = nextItem; // Set the previous item's link to this new item
+                copy = copy->next;
+                copy->key = original->key;
+                copy->val = original->val;
+            }
+            copy->next = NULL; // Set last item's link in chain to NULL
+        }
+        else {
+            table[i] = NULL;
+        }
+    }
+
+    #ifdef DEBUG
+        std::cout << "------------------------------------------------------------" << std::endl;
+        std::cout << "--------------------  Copy Constructor  --------------------" << std::endl;
+        std::cout << "------------------------------------------------------------" << std::endl;
+        std::cout << std::setw(6) << std::left << "I";
+        std::cout << std::setw(30) << std::left << "Original";
+        std::cout << std::setw(30) << std::left << "Copy" << std::endl;
+        std::cout << "------------------------------------------------------------" << std::endl;
+        for(int i = 0; i < TABLE_SIZE; i++) {
+            Item *originalTable = other.table[i];
+            Item *copyTable = table[i];
+            while(originalTable) {
+                std::cout << std::setw(6) << std::left << i;
+                std::cout << std::setw(30) << std::left << originalTable->key;
+                std::cout << std::setw(30) << std::left << copyTable->key << std::endl;
+                originalTable = originalTable->next;
+                copyTable = copyTable->next;
+            }
+        }
+        std::cout << "------------------------------------------------------------" << std::endl;
+    #endif /* DEBUG */
 }
 
 HashTable::~HashTable()
@@ -66,7 +115,58 @@ int& HashTable::operator[](string key)
 
 HashTable& HashTable::operator=(const HashTable &other)
 {
+    if(this != &other) {
+        clear();
 
+        table = new Item*[TABLE_SIZE];
+        for(int i = 0; i < TABLE_SIZE; i++) {
+            Item *original = other.table[i];
+
+            if(original) { // Create a copy of the first item if one exists
+                Item *copy = new Item();
+                table[i] = copy; // Set first item to table index
+                copy->key = original->key;
+                copy->val = original->val;
+
+                while(original->next) { // Create copies of any additional items found
+                    original = original->next;
+                    Item *nextItem = new Item();
+                    copy->next = nextItem; // Set the previous item's link to this new item
+                    copy = copy->next;
+                    copy->key = original->key;
+                    copy->val = original->val;
+                }
+                copy->next = NULL; // Set last item's link in chain to NULL
+            }
+            else {
+                table[i] = NULL;
+            }
+        }
+    }
+
+    #ifdef DEBUG
+        std::cout << "------------------------------------------------------------" << std::endl;
+        std::cout << "------------------- Assignment Operator --------------------" << std::endl;
+        std::cout << "------------------------------------------------------------" << std::endl;
+        std::cout << std::setw(6) << std::left << "I";
+        std::cout << std::setw(30) << std::left << "Original";
+        std::cout << std::setw(30) << std::left << "Copy" << std::endl;
+        std::cout << "------------------------------------------------------------" << std::endl;
+        for(int i = 0; i < TABLE_SIZE; i++) {
+            Item *originalTable = other.table[i];
+            Item *copyTable = table[i];
+            while(originalTable) {
+                std::cout << std::setw(6) << std::left << i;
+                std::cout << std::setw(30) << std::left << originalTable->key;
+                std::cout << std::setw(30) << std::left << copyTable->key << std::endl;
+                originalTable = originalTable->next;
+                copyTable = copyTable->next;
+            }
+        }
+        std::cout << "------------------------------------------------------------" << std::endl;
+    #endif /* DEBUG */
+
+    return *this;
 }
 
 inline void HashTable::clear()
