@@ -21,18 +21,47 @@ HashTable::~HashTable()
 
 void HashTable::insert(string key, int val)
 {
-
+    int index = getHashVal(key.c_str());
+    Item *newItem = new Item();
+    newItem->key = key;
+    newItem->val = val;
+    newItem->next = (table[index]) ? table[index] : NULL;
+    table[index] = newItem;
 }
 
 void HashTable::remove(string key)
 {
-
+    int index = getHashVal(key.c_str());
+    Item *item = table[index];
+    if(item && item->key == key) {
+        table[index] = item->next;
+        delete item;
+    }
+    else {
+        bool removed = false;
+        while(item && item->next && !removed) {
+            if(item->next->key == key) {
+                Item *temp = item->next;
+                item->next = temp->next;
+                delete temp;
+                removed = true;
+            }
+            item = item->next;
+        }
+    }
 }
-int temp = 0; //Delete after implementation of operator[]
+
 int& HashTable::operator[](string key)
 {
-    
-    return temp;
+    int index = getHashVal(key.c_str());
+    Item *item = table[index];
+    while(item && item->key != key)
+        item = item->next;
+    if(!item) {
+        insert(key, -1);
+        item = table[index];
+    }
+    return item->val;
 }
 
 HashTable& HashTable::operator=(const HashTable &other)
