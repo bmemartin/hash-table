@@ -1,3 +1,11 @@
+/**
+ * Function implementations for hash_table.h
+ *
+ * Author: Benjamin Martin
+ * Email Address: benjamin.martin2@griffithuni.edu.au
+ * Student ID: s2846492
+ */
+
 #include "hash_table.h"
 
 #include <cstdlib>
@@ -6,6 +14,13 @@
 
 #define DEBUG // Comment out to disable debug mode
 
+/**
+ * The constructor initialises the data member "table", our hash table.
+ * Table is an array that can hold memory addresses, pointers, to Items.
+ *
+ * It returns nothing.
+ * It takes no parameters.
+ */
 HashTable::HashTable()
 {
     table = new Item*[TABLE_SIZE];
@@ -13,6 +28,14 @@ HashTable::HashTable()
         table[i] = NULL;
 }
 
+/**
+ * The copy constructor performs a deep copy of data from one hash table to this one.
+ * Since the hash table contains pointers a deep copy ensures that the data is copied and
+ * not just the memory addresses.
+ *
+ * It returns nothing.
+ * It takes one parameter; a reference to another hash table which can only be read from.
+ */
 HashTable::HashTable(const HashTable &other)
 {
     table = new Item*[TABLE_SIZE];
@@ -63,11 +86,24 @@ HashTable::HashTable(const HashTable &other)
     #endif /* DEBUG */
 }
 
+/**
+ * The destructor calls the clear function
+ *
+ * It returns nothing.
+ * It takes no parameters.
+ */
 HashTable::~HashTable()
 {
     clear();
 }
 
+/**
+ * The insert function creates an Item object at a hashed index, calculated through getHashVal function,
+ * of the hash table. Each Item contains it's key, value and a memery address to the next Item object.
+ *
+ * It returns nothing.
+ * It takes two parameters; a string containing a key and an int containing the value related to the key.
+ */
 void HashTable::insert(string key, int val)
 {
     int index = getHashVal(key.c_str());
@@ -78,6 +114,12 @@ void HashTable::insert(string key, int val)
     table[index] = newItem;
 }
 
+/**
+ * The remove function looks for a specific Item and if found deletes it from the hash table.
+ *
+ * It returns nothing.
+ * It takes one parameter; a string containing a key.
+ */
 void HashTable::remove(string key)
 {
     int index = getHashVal(key.c_str());
@@ -100,6 +142,14 @@ void HashTable::remove(string key)
     }
 }
 
+/**
+ * Overloading the subscript operator allows Items to be retrieved or inserted with ease.
+ * The hash table is searched for the supplied key, if it is not found then an item with that key is created.
+ * The found Item or created Item's value is passed back via reference.
+ *
+ * It returns a reference to an int (memory address).
+ * It takes one parameter; a string containing a key.
+ */
 int& HashTable::operator[](string key)
 {
     int index = getHashVal(key.c_str());
@@ -113,6 +163,14 @@ int& HashTable::operator[](string key)
     return item->val;
 }
 
+/**
+ * The overloaded assignment operator now performs a deep copy of data from one hash table to this one.
+ * Since the hash table contains pointers a deep copy ensures that the data is copied and
+ * not just the memory addresses.
+ *
+ * It returns nothing.
+ * It takes one parameter; a reference to another hash table which can only be read from.
+ */
 HashTable& HashTable::operator=(const HashTable &other)
 {
     if(this != &other) {
@@ -169,6 +227,13 @@ HashTable& HashTable::operator=(const HashTable &other)
     return *this;
 }
 
+/**
+ * The clear function cycles through the hash table and any Item lists freeing each item
+ * and then the table from the heap.
+ *
+ * It returns nothing.
+ * It takes no parameters.
+ */
 inline void HashTable::clear()
 {
     for(int i = 0; i < TABLE_SIZE; i++) {
@@ -181,12 +246,18 @@ inline void HashTable::clear()
     delete[] table;
 }
 
+/**
+ * The getHashVal function calculates a hashed value (int) from a provided key.
+ *
+ * It returns an int.
+ * It takes one parameters; char pointer (memory address).
+ */
 int HashTable::getHashVal(const char *key)
 {
-  unsigned long hash = 5381;
-  int c;
-  while( (c = *(key++)) )
-    hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
-  int hashVal = (int)(hash % TABLE_SIZE);
-  return hashVal;
+    unsigned long hash = 5381;
+    int c;
+    while( (c = *(key++)) )
+        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+    int hashVal = (int)(hash % TABLE_SIZE);
+    return hashVal;
 }
