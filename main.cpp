@@ -34,6 +34,13 @@ bool testAssignment();
 
 bool testComboFunct();
 
+/**
+ * The "main" function of the program calls test functions to test
+ * the functionality of the HashTable class.
+ *
+ * It returns a whole number (int).
+ * It takes no parameters.
+ */
 int main()
 {
     int numTests = 0, numPassed = 0;
@@ -65,6 +72,13 @@ int main()
     cout << "======================================================================" << endl << endl;
 }
 
+/**
+ * readInCitiesTxt function reads in cities and their populations from a txt file and populates the
+ * passed HashTable with the data read.
+ *
+ * It returns nothing.
+ * It takes one parameter; a HashTable object
+ */
 void readInCitiesTxt(HashTable &table)
 {
     ifstream inFile("cities.txt");
@@ -80,6 +94,14 @@ void readInCitiesTxt(HashTable &table)
     inFile.close();
 }
 
+/**
+ * testConstructDestruct creates a HashTable object which is deleted on function end.
+ *
+ * The test passes if the object is created.
+ *
+ * It returns a boolean value (true/false).
+ * It takes no parameters.
+ */
 bool testConstructDestruct()
 {
     bool result = true;
@@ -93,6 +115,14 @@ bool testConstructDestruct()
     return result;
 }
 
+/**
+ * testInsert inserts three cities and their populations into a HashTable.
+ *
+ * The test passes if the cities populations are read back from the HashTable correctly.
+ *
+ * It returns a boolean value (true/false).
+ * It takes no parameters.
+ */
 bool testInsert()
 {
     bool result = false;
@@ -105,6 +135,10 @@ bool testInsert()
     table.insert("Melbourne", 4246345);
     table.insert("Devonport", 30330);
 
+    cout << "Sydney should read 4667283 ---- " << table["Sydney"] << endl;
+    cout << "Melbourne should read 4246345 ---- " << table["Melbourne"] << endl;
+    cout << "Devonport should read 30330 ---- " << table["Devonport"] << endl;
+
     if(table["Sydney"] == 4667283 && table["Melbourne"] == 4246345 && table["Devonport"] == 30330)
         result = true;
 
@@ -113,6 +147,14 @@ bool testInsert()
     return result;
 }
 
+/**
+ * testRemove inserts three cities and their populations into a HashTable and removes two of the inserted cities.
+ *
+ * The test passes if the cities are removed correctly.
+ *
+ * It returns a boolean value (true/false).
+ * It takes no parameters.
+ */
 bool testRemove()
 {
     bool result = false;
@@ -128,6 +170,10 @@ bool testRemove()
     table.remove("Melbourne");
     table.remove("Sydney");
 
+    cout << "Sydney should read -1 ---- " << table["Sydney"] << endl;
+    cout << "Melbourne should read -1 ---- " << table["Melbourne"] << endl;
+    cout << "Devonport should read 30330 ---- " << table["Devonport"] << endl;
+
     if(table["Sydney"] == -1 && table["Melbourne"] == -1 && table["Devonport"] == 30330)
         result = true;
 
@@ -136,6 +182,15 @@ bool testRemove()
     return result;
 }
 
+/**
+ * testSubscript calls the readInCitiesTxt function which uses the subscript operator for setting items within
+ * a HashTable.
+ *
+ * The test passes if the cities and populations were stored and accessed correctly.
+ *
+ * It returns a boolean value (true/false).
+ * It takes no parameters.
+ */
 bool testSubscript()
 {
     bool result = false;
@@ -146,6 +201,10 @@ bool testSubscript()
 
     readInCitiesTxt(table);
 
+    cout << "Sydney should read 4667283 ---- " << table["Sydney"] << endl;
+    cout << "Melbourne should read 4246345 ---- " << table["Melbourne"] << endl;
+    cout << "Devonport should read 30330 ---- " << table["Devonport"] << endl;
+
     if(table["Sydney"] == 4667283 && table["Melbourne"] == 4246345 && table["Devonport"] == 30330)
         result = true;
 
@@ -154,6 +213,15 @@ bool testSubscript()
     return result;
 }
 
+/**
+ * testCopyConstructor calls the readInCitiesTxt function to enter data into the HashTable and calls
+ * the copy constructor to copy "table" contents into "table2".
+ *
+ * The test always passes. It is up to testers discretion to view outputs for correct functionality.
+ *
+ * It returns a boolean value (true/false).
+ * It takes no parameters.
+ */
 bool testCopyConstructor()
 {
     bool result = true;
@@ -171,6 +239,15 @@ bool testCopyConstructor()
     return result;
 }
 
+/**
+ * testAssignment calls the readInCitiesTxt function to enter data into the HashTable and uses the assignment
+ * operator to copy "table" contents into "table2".
+ *
+ * The test always passes. It is up to testers discretion to view outputs for correct functionality.
+ *
+ * It returns a boolean value (true/false).
+ * It takes no parameters.
+ */
 bool testAssignment()
 {
     bool result = true;
@@ -189,6 +266,16 @@ bool testAssignment()
     return result;
 }
 
+/**
+ * testComboFunct tests all the functions of the HashTable class within one test. Different HashTable functions
+ * are called and combined into a more real world scenario.
+ *
+ * The test passes if the cities and populations were stored, accessed, removed, and copied correctly.
+ * Test checks are performed at different times throughout the function.
+ *
+ * It returns a boolean value (true/false).
+ * It takes no parameters.
+ */
 bool testComboFunct()
 {
     bool result = false;
@@ -204,12 +291,21 @@ bool testComboFunct()
 
     HashTable table2 = table;
 
+    cout << "New York City should read 8245123 ---- " << table["New York City"] << endl;
+    cout << "New York City (table2) should read 8245123 ---- " << table2["New York City"] << endl;
+    cout << "Sydney should read 4667283 ---- " << table["Sydney"] << endl;
+
     bool part1 = (table["New York City"] == 8245123 && table["New York City"] == table2["New York City"] && table["Sydney"] == 4667283) ? true : false;
 
     table.remove("New York City");
     table.remove("Sydney");
 
     table2 = table;
+
+    cout << "New York City should read -1 ---- " << table["New York City"] << endl;
+    cout << "New York City (table2) should read -1 ---- " << table2["New York City"] << endl;
+    cout << "Sydney should read -1 ---- " << table["Sydney"] << endl;
+    cout << "Los Angeles (table2) should read 3820345 ---- " << table2["Los Angeles"] << endl;
 
     bool part2 = (table["New York City"] == -1 && table["New York City"] == table2["New York City"]) ? true : false;
     bool part3 = (table["Sydney"] == -1 && table2["Los Angeles"] == 3820345) ? true : false;
