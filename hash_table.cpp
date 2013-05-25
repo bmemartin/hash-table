@@ -64,7 +64,7 @@ HashTable::HashTable(const HashTable &other)
     }
 
     #ifdef DEBUG
-        std::cout << "------------------------------------------------------------" << std::endl;
+        std::cout << "\n------------------------------------------------------------" << std::endl;
         std::cout << "--------------------  Copy Constructor  --------------------" << std::endl;
         std::cout << "------------------------------------------------------------" << std::endl;
         std::cout << std::setw(6) << std::left << "I";
@@ -82,7 +82,7 @@ HashTable::HashTable(const HashTable &other)
                 copyTable = copyTable->next;
             }
         }
-        std::cout << "------------------------------------------------------------" << std::endl;
+        std::cout << "------------------------------------------------------------\n" << std::endl;
     #endif /* DEBUG */
 }
 
@@ -205,7 +205,7 @@ HashTable& HashTable::operator=(const HashTable &other)
     }
 
     #ifdef DEBUG
-        std::cout << "------------------------------------------------------------" << std::endl;
+        std::cout << "\n------------------------------------------------------------" << std::endl;
         std::cout << "------------------- Assignment Operator --------------------" << std::endl;
         std::cout << "------------------------------------------------------------" << std::endl;
         std::cout << std::setw(6) << std::left << "I";
@@ -223,7 +223,7 @@ HashTable& HashTable::operator=(const HashTable &other)
                 copyTable = copyTable->next;
             }
         }
-        std::cout << "------------------------------------------------------------" << std::endl;
+        std::cout << "------------------------------------------------------------\n" << std::endl;
     #endif /* DEBUG */
 
     return *this;
