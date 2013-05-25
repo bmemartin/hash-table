@@ -107,10 +107,12 @@ HashTable::~HashTable()
 void HashTable::insert(string key, int val)
 {
     int index = getHashVal(key.c_str());
-    Item *newItem = new Item();
+    bool useExisting = (table[index] && table[index]->val < 0) ? true : false;
+    Item *newItem = (useExisting) ? table[index] : new Item();
     newItem->key = key;
     newItem->val = val;
-    newItem->next = (table[index]) ? table[index] : NULL;
+    if(!useExisting)
+        newItem->next = (table[index]) ? table[index] : NULL;
     table[index] = newItem;
 }
 
