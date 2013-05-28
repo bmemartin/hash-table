@@ -40,26 +40,23 @@ HashTable::HashTable(const HashTable &other)
 {
     table = new Item*[TABLE_SIZE];
     for(int i = 0; i < TABLE_SIZE; i++) {
-        Item *original = other.table[i];
+        table[i] = NULL;
 
+        Item *original = other.table[i];
         if(original) { // Create a copy of the first item if one exists
-            Item *copy = new Item();
+            Item *copy = new Item;
             table[i] = copy; // Set first item to table index
             copy->key = original->key;
             copy->val = original->val;
 
             while(original->next) { // Create copies of any additional items found
                 original = original->next;
-                Item *nextItem = new Item();
-                copy->next = nextItem; // Set the previous item's link to this new item
+                copy->next = new Item; // Set the previous item's link to this new item
                 copy = copy->next;
                 copy->key = original->key;
                 copy->val = original->val;
             }
             copy->next = NULL; // Set last item's link in chain to NULL
-        }
-        else {
-            table[i] = NULL;
         }
     }
 
@@ -108,7 +105,7 @@ void HashTable::insert(string key, int val)
 {
     int index = getHashVal(key.c_str());
     bool useExisting = (table[index] && table[index]->val < 0) ? true : false;
-    Item *newItem = (useExisting) ? table[index] : new Item();
+    Item *newItem = (useExisting) ? table[index] : new Item;
     newItem->key = key;
     newItem->val = val;
     if(!useExisting)
@@ -180,26 +177,23 @@ HashTable& HashTable::operator=(const HashTable &other)
 
         table = new Item*[TABLE_SIZE];
         for(int i = 0; i < TABLE_SIZE; i++) {
-            Item *original = other.table[i];
+            table[i] = NULL;
 
+            Item *original = other.table[i];
             if(original) { // Create a copy of the first item if one exists
-                Item *copy = new Item();
+                Item *copy = new Item;
                 table[i] = copy; // Set first item to table index
                 copy->key = original->key;
                 copy->val = original->val;
 
                 while(original->next) { // Create copies of any additional items found
                     original = original->next;
-                    Item *nextItem = new Item();
-                    copy->next = nextItem; // Set the previous item's link to this new item
+                    copy->next = new Item; // Set the previous item's link to this new item
                     copy = copy->next;
                     copy->key = original->key;
                     copy->val = original->val;
                 }
                 copy->next = NULL; // Set last item's link in chain to NULL
-            }
-            else {
-                table[i] = NULL;
             }
         }
     }
@@ -236,7 +230,7 @@ HashTable& HashTable::operator=(const HashTable &other)
  * It returns nothing.
  * It takes no parameters.
  */
-inline void HashTable::clear()
+void HashTable::clear()
 {
     for(int i = 0; i < TABLE_SIZE; i++) {
         while(table[i]) {
